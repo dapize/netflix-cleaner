@@ -1,0 +1,21 @@
+{
+	"name": "netflix-cleaner",
+	"type": "module",
+	"private": true,
+	"scripts": {
+		"clean": "rm -rf dist package node_modules",
+		"format": "bunx biome format --write ./src",
+		"lint": "bunx biome lint ./src",
+		"lint:fix": "bunx biome check --write --unsafe ./src",
+		"build": "rm -rf package && mkdir package && bun build src/content.ts --outdir=package --target=browser --minify && cp public/manifest.json public/background.js package/",
+		"build:crx": "bun run build && rm -rf dist && mkdir dist && bunx crx pack ./package -p key.pem -o ./dist/netflix-cleaner.crx"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "^2.1.3",
+		"@types/bun": "latest",
+		"crx": "^5.0.1"
+	},
+	"peerDependencies": {
+		"typescript": "^5"
+	}
+}

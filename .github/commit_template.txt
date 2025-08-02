@@ -1,0 +1,8 @@
+# Plantilla de Commit (usar con `git commit -t .github/commit_template.txt`)
+
+<tipo>: descripción clara de lo que se hizo (#ID)
+
+# Ejemplos:
+# feat: integrar compresión de imagen vía Rust FFI (#14)
+# fix: corregir error de ruta en carga de imágenes (#22)
+# chore: agregar configuración de ESLint (#3)
