@@ -1,12 +1,12 @@
-import type { ISvgIcons, IPlayerElements } from './content.d';
-import { generateRandomId, formatTime } from './utils'
+import type { ISvgIcons, IPlayerElements } from "./content.d";
+import { generateRandomId, formatTime } from "./utils";
 
 // Remove the Netflix overlay
 const cleanNetflixOverlay = (): void => {
-	const overlay = document.querySelector(".interstitial-full-screen");
-	if (overlay) {
-		overlay.remove();
-	}
+  const overlay = document.querySelector(".interstitial-full-screen");
+  if (overlay) {
+    overlay.remove();
+  }
 };
 
 const svgIcons: ISvgIcons = {
@@ -221,10 +221,10 @@ const cssStyles = `
 
 const injectStyles = (): void => {
   const styleElement = document.createElement("style");
-  styleElement.id = "controlsStyles"
+  styleElement.id = "controlsStyles";
   styleElement.textContent = cssStyles;
   document.head.appendChild(styleElement);
-}
+};
 
 const createPlayerElements = (video: HTMLVideoElement): IPlayerElements => {
   const controlsOverlay = document.createElement("div");
@@ -309,14 +309,16 @@ const createPlayerElements = (video: HTMLVideoElement): IPlayerElements => {
     progressThumb,
     timeDisplay,
     fullscreenBtn,
-    backBtn
+    backBtn,
   };
-}
+};
 
 let showControls: () => void;
+let keydownActions: (event: KeyboardEvent) => void;
+let offFullscreenBtn: () => void;
 
 const initializePlayer = (video: HTMLVideoElement): void => {
-  if (!document.getElementById('controlsStyles')) injectStyles();
+  if (!document.getElementById("controlsStyles")) injectStyles();
   const elements = createPlayerElements(video);
   const {
     controlsOverlay,
@@ -326,7 +328,7 @@ const initializePlayer = (video: HTMLVideoElement): void => {
     progressThumb,
     timeDisplay,
     fullscreenBtn,
-    backBtn
+    backBtn,
   } = elements;
 
   let controlsTimeout: ReturnType<typeof setTimeout> | null = null;
@@ -335,15 +337,15 @@ const initializePlayer = (video: HTMLVideoElement): void => {
     if (!video.paused) {
       controlsOverlay.classList.remove("visible");
     }
-  }
+  };
 
   showControls = (): void => {
     controlsOverlay.classList.add("visible");
     if (controlsTimeout) clearTimeout(controlsTimeout);
     controlsTimeout = setTimeout(hideControls, 3000);
-  }
+  };
 
-  const togglePlayPause = (): void =>  {
+  const togglePlayPause = (): void => {
     if (video.paused) {
       video.play();
       playPauseBtn.innerHTML = svgIcons.pause;
@@ -351,7 +353,7 @@ const initializePlayer = (video: HTMLVideoElement): void => {
       video.pause();
       playPauseBtn.innerHTML = svgIcons.play;
     }
-  }
+  };
 
   const updateProgress = (): void => {
     const progress = (video.currentTime / video.duration) * 100;
@@ -361,7 +363,7 @@ const initializePlayer = (video: HTMLVideoElement): void => {
     const currentTime = formatTime(video.currentTime);
     const duration = formatTime(video.duration);
     timeDisplay.textContent = `${currentTime} / ${duration}`;
-  }
+  };
 
   const seek = (event: MouseEvent): void => {
     const rect = progressContainer.getBoundingClientRect();
@@ -369,7 +371,7 @@ const initializePlayer = (video: HTMLVideoElement): void => {
     const width = rect.width;
     const percentage = clickX / width;
     video.currentTime = percentage * video.duration;
-  }
+  };
 
   const toggleFullscreen = (): void => {
     if (!document.fullscreenElement) {
@@ -377,6 +379,30 @@ const initializePlayer = (video: HTMLVideoElement): void => {
       fullscreenBtn.innerHTML = svgIcons.exitFullscreen;
     } else {
       document.exitFullscreen();
+      fullscreenBtn.innerHTML = svgIcons.fullscreen;
+    }
+  };
+
+  keydownActions = (event: KeyboardEvent) => {
+    switch (event.code) {
+      case "Space":
+        event.preventDefault();
+        togglePlayPause();
+        break;
+      case "ArrowLeft":
+        video.currentTime -= 10;
+        break;
+      case "ArrowRight":
+        video.currentTime += 10;
+        break;
+      case "KeyF":
+        toggleFullscreen();
+        break;
+    }
+  }
+
+  offFullscreenBtn = () => {
+    if (!document.fullscreenElement) {
       fullscreenBtn.innerHTML = svgIcons.fullscreen;
     }
   }
@@ -390,11 +416,14 @@ const initializePlayer = (video: HTMLVideoElement): void => {
 
   document.addEventListener("mousemove", showControls);
   document.addEventListener("mouseenter", showControls);
+  document.addEventListener('fullscreenchange', offFullscreenBtn);
+  document.addEventListener("keydown", keydownActions);
 
   backBtn.addEventListener("click", () => {
     window.history.back();
   });
-}
+
+};
 
 const removeControlsOverlay = () => {
   const controlsOverlay = document.getElementById("controlsOverlay");
@@ -402,40 +431,42 @@ const removeControlsOverlay = () => {
     if (showControls) {
       document.removeEventListener("mousemove", showControls);
       document.removeEventListener("mouseenter", showControls);
+      document.removeEventListener("keydown", keydownActions);
+      document.removeEventListener("fullscreenchange", offFullscreenBtn);
     }
     controlsOverlay.remove();
   }
-}
+};
 
 window.addEventListener("popstate", () => {
-	if (!document.location.href.includes("watch")) {
+  if (!document.location.href.includes("watch")) {
     removeControlsOverlay();
-	}
+  }
 });
 
 let timeOutPlay: ReturnType<typeof setTimeout>;
 
 const observer = new MutationObserver(() => {
-	cleanNetflixOverlay();
+  cleanNetflixOverlay();
 
-	const video = document.querySelector("#appMountPoint video") as HTMLVideoElement | null;
-	if (!video) return;
+  if (!document.location.href.includes("watch")) return;
 
-	let videoId = video.dataset.videoId;
-	if (!videoId) {
-		videoId = generateRandomId();
-		video.dataset.videoId = videoId;
-	} else {
-    return;
-  }
+  const video = document.querySelector(
+    "#appMountPoint video"
+  ) as HTMLVideoElement | null;
+  if (!video) return;
+
+  let videoId = video.dataset.videoId;
+  if (videoId) return;
+
+  videoId = generateRandomId();
+  video.dataset.videoId = videoId;
 
   if (timeOutPlay) clearTimeout(timeOutPlay);
   timeOutPlay = setTimeout(() => {
     video
       .play()
       .then(() => {
-        if (!document.location.href.includes("watch")) return;
-
         const controlsOverlay = document.getElementById("controlsOverlay");
         if (!controlsOverlay) {
           initializePlayer(video);
@@ -451,7 +482,7 @@ const observer = new MutationObserver(() => {
       .catch(() => {
         console.log("Ocurrió un error al darle play!");
       });
-  }, 1000)
+  }, 1000);
 });
 
 observer.observe(document.body, { childList: true, subtree: true });

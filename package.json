@@ -8,7 +8,7 @@
 		"lint": "biome lint ./src",
 		"lint:fix": "biome check --write --unsafe ./src",
 		"build": "rm -rf package && mkdir package && bun build src/content.ts --outdir=package --target=browser && cp public/manifest.json public/background.js package/",
-		"build:crx": "bun run build && rm -rf dist && mkdir dist && bunx crx pack ./package -p key.pem -o ./dist/netflix-cleaner.crx"
+		"build:crx": "rm -rf dist && mkdir dist && bunx crx pack ./package -p key.pem -o ./dist/netflix-cleaner.crx"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "^2.1.3",
