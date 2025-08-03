@@ -5,9 +5,9 @@
 	"scripts": {
 		"clean": "rm -rf dist package node_modules",
 		"format": "bunx biome format --write ./src",
-		"lint": "bunx biome lint ./src",
-		"lint:fix": "bunx biome check --write --unsafe ./src",
-		"build": "rm -rf package && mkdir package && bun build src/content.ts --outdir=package --target=browser --minify && cp public/manifest.json public/background.js package/",
+		"lint": "biome lint ./src",
+		"lint:fix": "biome check --write --unsafe ./src",
+		"build": "rm -rf package && mkdir package && bun build src/content.ts --outdir=package --target=browser && cp public/manifest.json public/background.js package/",
 		"build:crx": "bun run build && rm -rf dist && mkdir dist && bunx crx pack ./package -p key.pem -o ./dist/netflix-cleaner.crx"
 	},
 	"devDependencies": {
