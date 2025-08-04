@@ -452,12 +452,36 @@ window.addEventListener("popstate", () => {
   }
 });
 
+const dataPeeker = async (tried = 0): Promise<{
+    title: string | null;
+    subTitle: string | null;
+} | null> => {
+  if (tried === 8) {
+    return Promise.resolve(null)
+  }
+  let titleElement = document.querySelector("h3.title");
+  let subTitleElement = document.querySelector("h4.playable-title");
+  if (!titleElement && !subTitleElement) {
+    await new Promise((resolve) => setTimeout(() => resolve(null), 500));
+    return dataPeeker(tried += 1);
+  }
+  const title = titleElement!.textContent;
+  const subTitle = subTitleElement!.textContent;
+  return Promise.resolve({
+    title,
+    subTitle
+  });
+}
+
 let timeOutPlay: ReturnType<typeof setTimeout>;
 
-const observer = new MutationObserver(() => {
+const observer = new MutationObserver(async () => {
   cleanNetflixOverlay();
 
   if (!document.location.href.includes("watch")) return;
+
+  // const data = await dataPeeker();
+  // console.log('data: ', data);
 
   const video = document.querySelector(
     "#appMountPoint video"

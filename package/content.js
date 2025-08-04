@@ -412,11 +412,30 @@ window.addEventListener("popstate", () => {
     removeControlsOverlay();
   }
 });
+var dataPeeker = async (tried = 0) => {
+  if (tried === 8) {
+    return Promise.resolve(null);
+  }
+  let titleElement = document.querySelector("h3.title");
+  let subTitleElement = document.querySelector("h4.playable-title");
+  if (!titleElement && !subTitleElement) {
+    await new Promise((resolve) => setTimeout(() => resolve(null), 500));
+    return dataPeeker(tried += 1);
+  }
+  const title = titleElement.textContent;
+  const subTitle = subTitleElement.textContent;
+  return Promise.resolve({
+    title,
+    subTitle
+  });
+};
 var timeOutPlay;
-var observer = new MutationObserver(() => {
+var observer = new MutationObserver(async () => {
   cleanNetflixOverlay();
   if (!document.location.href.includes("watch"))
     return;
+  const data = await dataPeeker();
+  console.log("data: ", data);
   const video = document.querySelector("#appMountPoint video");
   if (!video)
     return;
