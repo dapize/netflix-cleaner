@@ -1,37 +1,38 @@
-import type { ISvgIcons, IPlayerElements } from "./content.d";
-import { generateRandomId, formatTime } from "./utils";
+// src/utils.ts
+var generateRandomId = (length = 8) => {
+  return Math.random().toString(36).substring(2, length + 2);
+};
+var formatTime = (seconds) => {
+  const mins = Math.floor(seconds / 60);
+  const secs = Math.floor(seconds % 60);
+  return `${mins}:${secs.toString().padStart(2, "0")}`;
+};
 
-// Remove the Netflix overlay
-const cleanNetflixOverlay = (): void => {
+// src/content.ts
+var cleanNetflixOverlay = () => {
   const overlay = document.querySelector(".interstitial-full-screen");
   if (overlay) {
     overlay.remove();
   }
 };
-
-const svgIcons: ISvgIcons = {
+var svgIcons = {
   play: `<svg width="50" height="50" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M8 5v14l11-7z"/>
             </svg>`,
-
   pause: `<svg width="50" height="50" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
             </svg>`,
-
   back: `<svg width="50" height="50" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
             </svg>`,
-
   fullscreen: `<svg width="50" height="50" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/>
             </svg>`,
-
   exitFullscreen: `<svg width="50" height="50" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M5 16h3v3h2v-5H5v2zm3-8H5v2h5V5H8v3zm6 11h2v-3h3v-2h-5v5zm2-11V5h-2v5h5V8h-3z"/>
-            </svg>`,
+            </svg>`
 };
-
-const cssStyles = `
+var cssStyles = `
   #appMountPoint video::-webkit-media-controls {
     display: none !important;
   }
@@ -227,89 +228,66 @@ const cssStyles = `
     pointer-events: none;
   }
 `;
-
-const injectStyles = (): void => {
+var injectStyles = () => {
   const styleElement = document.createElement("style");
   styleElement.id = "controlsStyles";
   styleElement.textContent = cssStyles;
   document.head.appendChild(styleElement);
 };
-
-const createPlayerElements = (video: HTMLVideoElement): IPlayerElements => {
+var createPlayerElements = (video) => {
   const controlsOverlay = document.createElement("div");
   controlsOverlay.id = "controlsOverlay";
   controlsOverlay.className = "controls-overlay";
-
-  const videoId = video.dataset.videoId!;
+  const videoId = video.dataset.videoId;
   controlsOverlay.dataset.controlsId = videoId;
-
   const backBtn = document.createElement("button");
   backBtn.id = "backBtn";
   backBtn.className = "back-button";
   backBtn.innerHTML = svgIcons.back;
-
   const bottomControls = document.createElement("div");
   bottomControls.className = "bottom-controls";
-
   const progressSection = document.createElement("div");
   progressSection.className = "progress-section";
-
   const progressContainer = document.createElement("div");
   progressContainer.id = "progressContainer";
   progressContainer.className = "progress-container";
-
   const progressBar = document.createElement("div");
   progressBar.id = "progressBar";
   progressBar.className = "progress-bar";
-
   const progressThumb = document.createElement("div");
   progressThumb.id = "progressThumb";
   progressThumb.className = "progress-thumb";
-
   const controlsRow = document.createElement("div");
   controlsRow.className = "controls-row";
-
   const leftControls = document.createElement("div");
   leftControls.className = "left-controls";
-
   const playPauseBtn = document.createElement("button");
   playPauseBtn.id = "playPauseBtn";
   playPauseBtn.className = "play-pause-button";
   playPauseBtn.innerHTML = svgIcons.pause;
-
   const timeDisplay = document.createElement("span");
   timeDisplay.id = "timeDisplay";
   timeDisplay.className = "time-display";
   timeDisplay.textContent = "0:00 / 0:00";
-
   const rightControls = document.createElement("div");
   rightControls.className = "right-controls";
-
   const fullscreenBtn = document.createElement("button");
   fullscreenBtn.id = "fullscreenBtn";
   fullscreenBtn.className = "fullscreen-button";
   fullscreenBtn.innerHTML = svgIcons.fullscreen;
-
   progressContainer.appendChild(progressBar);
   progressContainer.appendChild(progressThumb);
   progressSection.appendChild(progressContainer);
-
   leftControls.appendChild(playPauseBtn);
   leftControls.appendChild(timeDisplay);
-
   rightControls.appendChild(fullscreenBtn);
-
   controlsRow.appendChild(leftControls);
   controlsRow.appendChild(rightControls);
-
   bottomControls.appendChild(progressSection);
   bottomControls.appendChild(controlsRow);
-
   controlsOverlay.appendChild(backBtn);
   controlsOverlay.appendChild(bottomControls);
-
   document.body.appendChild(controlsOverlay);
-
   return {
     controlsOverlay,
     playPauseBtn,
@@ -318,16 +296,15 @@ const createPlayerElements = (video: HTMLVideoElement): IPlayerElements => {
     progressThumb,
     timeDisplay,
     fullscreenBtn,
-    backBtn,
+    backBtn
   };
 };
-
-let showControls: () => void;
-let keydownActions: (event: KeyboardEvent) => void;
-let offFullscreenBtn: () => void;
-
-const initializePlayer = (video: HTMLVideoElement): void => {
-  if (!document.getElementById("controlsStyles")) injectStyles();
+var showControls;
+var keydownActions;
+var offFullscreenBtn;
+var initializePlayer = (video) => {
+  if (!document.getElementById("controlsStyles"))
+    injectStyles();
   const elements = createPlayerElements(video);
   const {
     controlsOverlay,
@@ -337,24 +314,21 @@ const initializePlayer = (video: HTMLVideoElement): void => {
     progressThumb,
     timeDisplay,
     fullscreenBtn,
-    backBtn,
+    backBtn
   } = elements;
-
-  let controlsTimeout: ReturnType<typeof setTimeout> | null = null;
-
-  const hideControls = (): void => {
+  let controlsTimeout = null;
+  const hideControls = () => {
     if (!video.paused) {
       controlsOverlay.classList.remove("visible");
     }
   };
-
-  showControls = (): void => {
+  showControls = () => {
     controlsOverlay.classList.add("visible");
-    if (controlsTimeout) clearTimeout(controlsTimeout);
+    if (controlsTimeout)
+      clearTimeout(controlsTimeout);
     controlsTimeout = setTimeout(hideControls, 3000);
   };
-
-  const togglePlayPause = (): void => {
+  const togglePlayPause = () => {
     if (video.paused) {
       video.play();
       playPauseBtn.innerHTML = svgIcons.pause;
@@ -363,26 +337,22 @@ const initializePlayer = (video: HTMLVideoElement): void => {
       playPauseBtn.innerHTML = svgIcons.play;
     }
   };
-
-  const updateProgress = (): void => {
-    const progress = (video.currentTime / video.duration) * 100;
+  const updateProgress = () => {
+    const progress = video.currentTime / video.duration * 100;
     progressBar.style.width = `${progress}%`;
     progressThumb.style.left = `${progress}%`;
-
     const currentTime = formatTime(video.currentTime);
     const duration = formatTime(video.duration);
     timeDisplay.textContent = `${currentTime} / ${duration}`;
   };
-
-  const seek = (event: MouseEvent): void => {
+  const seek = (event) => {
     const rect = progressContainer.getBoundingClientRect();
     const clickX = event.clientX - rect.left;
     const width = rect.width;
     const percentage = clickX / width;
     video.currentTime = percentage * video.duration;
   };
-
-  const toggleFullscreen = (): void => {
+  const toggleFullscreen = () => {
     if (!document.fullscreenElement) {
       video.requestFullscreen();
       fullscreenBtn.innerHTML = svgIcons.exitFullscreen;
@@ -391,8 +361,7 @@ const initializePlayer = (video: HTMLVideoElement): void => {
       fullscreenBtn.innerHTML = svgIcons.fullscreen;
     }
   };
-
-  keydownActions = (event: KeyboardEvent) => {
+  keydownActions = (event) => {
     switch (event.code) {
       case "Space":
         togglePlayPause();
@@ -407,33 +376,26 @@ const initializePlayer = (video: HTMLVideoElement): void => {
         toggleFullscreen();
         break;
     }
-  }
-
+  };
   offFullscreenBtn = () => {
     if (!document.fullscreenElement) {
       fullscreenBtn.innerHTML = svgIcons.fullscreen;
     }
-  }
-
+  };
   video.addEventListener("loadedmetadata", updateProgress);
   video.addEventListener("timeupdate", updateProgress);
-
   playPauseBtn.addEventListener("click", togglePlayPause);
   progressContainer.addEventListener("click", seek);
   fullscreenBtn.addEventListener("click", toggleFullscreen);
-
   document.addEventListener("mousemove", showControls);
   document.addEventListener("mouseenter", showControls);
-  document.addEventListener('fullscreenchange', offFullscreenBtn);
+  document.addEventListener("fullscreenchange", offFullscreenBtn);
   document.addEventListener("keydown", keydownActions);
-
   backBtn.addEventListener("click", () => {
     window.history.back();
   });
-
 };
-
-const removeControlsOverlay = () => {
+var removeControlsOverlay = () => {
   const controlsOverlay = document.getElementById("controlsOverlay");
   if (controlsOverlay) {
     if (showControls) {
@@ -445,52 +407,41 @@ const removeControlsOverlay = () => {
     controlsOverlay.remove();
   }
 };
-
 window.addEventListener("popstate", () => {
   if (!document.location.href.includes("watch")) {
     removeControlsOverlay();
   }
 });
-
-let timeOutPlay: ReturnType<typeof setTimeout>;
-
-const observer = new MutationObserver(() => {
+var timeOutPlay;
+var observer = new MutationObserver(() => {
   cleanNetflixOverlay();
-
-  if (!document.location.href.includes("watch")) return;
-
-  const video = document.querySelector(
-    "#appMountPoint video"
-  ) as HTMLVideoElement | null;
-  if (!video) return;
-
+  if (!document.location.href.includes("watch"))
+    return;
+  const video = document.querySelector("#appMountPoint video");
+  if (!video)
+    return;
   let videoId = video.dataset.videoId;
-  if (videoId) return;
-
+  if (videoId)
+    return;
   videoId = generateRandomId();
   video.dataset.videoId = videoId;
-
-  if (timeOutPlay) clearTimeout(timeOutPlay);
+  if (timeOutPlay)
+    clearTimeout(timeOutPlay);
   timeOutPlay = setTimeout(() => {
-    video
-      .play()
-      .then(() => {
-        const controlsOverlay = document.getElementById("controlsOverlay");
-        if (!controlsOverlay) {
-          initializePlayer(video);
-          return;
-        }
-
-        const controlsId = controlsOverlay.dataset.controlsId;
-        if (controlsId !== videoId) {
-          removeControlsOverlay();
-          initializePlayer(video);
-        }
-      })
-      .catch(() => {
-        console.log("Ocurrió un error al darle play!");
-      });
+    video.play().then(() => {
+      const controlsOverlay = document.getElementById("controlsOverlay");
+      if (!controlsOverlay) {
+        initializePlayer(video);
+        return;
+      }
+      const controlsId = controlsOverlay.dataset.controlsId;
+      if (controlsId !== videoId) {
+        removeControlsOverlay();
+        initializePlayer(video);
+      }
+    }).catch(() => {
+      console.log("Ocurrió un error al darle play!");
+    });
   }, 1000);
 });
-
 observer.observe(document.body, { childList: true, subtree: true });
