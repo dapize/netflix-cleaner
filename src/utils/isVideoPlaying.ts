@@ -1,1 +1,2 @@
-export const isVideoPlaying = (video: HTMLVideoElement) => !!(video.currentTime > 0 && !video.paused && !video.ended && video.readyState > 2);
+export const isVideoPlaying = (video: HTMLVideoElement) =>
+	!!(video.currentTime > 0 && !video.paused && !video.ended && video.readyState > 2);

@@ -1,1 +1,1 @@
-export { PlayPauseButton } from './PlayPauseButton';
+export { PlayPauseButton } from "./PlayPauseButton";

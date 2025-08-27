@@ -1,10 +1,10 @@
 import { render } from "preact";
-import { App } from "./app.tsx";
 import appRawCss from "./app.css?inline";
-import indexRawCss from "./index.css?inline";
-import { injectStyle } from "./utils/injectStyle.ts";
+import { App } from "./app.tsx";
 import { MainProvider } from "./context/Main";
 import { removeOverlay } from "./helpers/removeOverlay.ts";
+import indexRawCss from "./index.css?inline";
+import { injectStyle } from "./utils/injectStyle.ts";
 
 removeOverlay();
 
@@ -18,10 +18,8 @@ injectStyle(indexRawCss, document.body);
 injectStyle(appRawCss, shadowRoot);
 
 render(
-  <MainProvider>
-    <App />
-  </MainProvider>,
-  shadowRoot
+	<MainProvider>
+		<App />
+	</MainProvider>,
+	shadowRoot,
 );
-
-
