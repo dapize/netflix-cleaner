@@ -67,6 +67,10 @@ export const App = () => {
 	}, []);
 
 	useEffect(() => {
+		if (!inWatchPage) {
+			setMetadata(undefined);
+			return;
+		}
 		(async () => {
 			const nodeTitle = await observerNode("h3.title");
 			setMetadata((currentState) => ({
@@ -81,7 +85,7 @@ export const App = () => {
 				title: currentState?.title as string,
 			}));
 		})();
-	}, []);
+	}, [inWatchPage]);
 
 	if (!watchVideoNode || !videoNode || !inWatchPage) {
 		return;
