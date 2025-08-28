@@ -30,7 +30,7 @@ export const ProgressBar = () => {
 	}, []);
 
 	return (
-		<div class="flex justify-between items-center w-full mb-2">
+		<div class="flex justify-between items-center w-full mb-1">
 			<div class="h-[6px] bg-white/30 rounded-[3px] relative w-[calc(100%-70px)]">
 				<div class="h-full rounded-[3px] bg-[#e50914]" style={{ width: `${percentage}%` }}></div>
 			</div>

@@ -18,7 +18,6 @@ export const PlayPauseButton = () => {
 	};
 
 	const pressSpaceKey = (event: KeyboardEvent) => {
-		console.log("pressSpaceKey! > event.code: ", event.code);
 		if (event.code === "Space") {
 			onClickHandler();
 		}
@@ -37,12 +36,12 @@ export const PlayPauseButton = () => {
 
 		video.addEventListener("pause", setPlayToFalse);
 		video.addEventListener("play", setPlayToTrue);
-		document.addEventListener("keydown", pressSpaceKey);
+		document.addEventListener("keyup", pressSpaceKey);
 
 		return () => {
 			video.removeEventListener("pause", setPlayToFalse);
 			video.removeEventListener("play", setPlayToTrue);
-			document.removeEventListener("keydown", pressSpaceKey);
+			document.removeEventListener("keyup", pressSpaceKey);
 		};
 	}, []);
 
