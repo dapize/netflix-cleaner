@@ -7,8 +7,8 @@ export const Metadata = () => {
 
 	return (
 		<div class="h-[70px] flex items-center justify-center text-white gap-x-5 ml-8">
-			<span class="text-[24px] leading-[30px] font-bold">{title}</span>{" "}
-			<span class="text-[22px] opacity-75 h-[32px] flex justify-center items-end">{subTitle}</span>
+			<span class="text-[24px] font-medium">{title}</span>{" "}
+			<span class="text-[22px] opacity-75 h-[36px] flex justify-center items-end">{subTitle}</span>
 		</div>
 	);
 };

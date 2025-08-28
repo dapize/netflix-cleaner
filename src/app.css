@@ -1,1 +1,6 @@
 @import "tailwindcss";
+
+/* biome-ignore lint/suspicious/noUnknownAtRules: TailwindCSS V4 */
+@theme {
+	--spacing: 4px;
+}

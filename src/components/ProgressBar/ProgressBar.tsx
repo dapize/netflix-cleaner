@@ -22,22 +22,10 @@ export const ProgressBar = () => {
 		}
 	}, []);
 
-	const pressArrowKey = useCallback((event: KeyboardEvent) => {
-		const video = videoNode as HTMLVideoElement;
-		if (event.code === "ArrowRight") {
-			video.currentTime += 10;
-		}
-		if (event.code === "ArrowLeft") {
-			video.currentTime -= 10;
-		}
-	}, []);
-
 	useEffect(() => {
 		videoNode!.addEventListener("timeupdate", timeupdateHandler);
-		document.addEventListener("keydown", pressArrowKey);
 		return () => {
 			videoNode!.removeEventListener("timeupdate", timeupdateHandler);
-			document.removeEventListener("keydown", pressArrowKey);
 		};
 	}, []);
 

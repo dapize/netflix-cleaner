@@ -18,6 +18,7 @@ export const PlayPauseButton = () => {
 	};
 
 	const pressSpaceKey = (event: KeyboardEvent) => {
+		console.log("pressSpaceKey! > event.code: ", event.code);
 		if (event.code === "Space") {
 			onClickHandler();
 		}
