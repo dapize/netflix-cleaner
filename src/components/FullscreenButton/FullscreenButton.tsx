@@ -36,5 +36,5 @@ export const FullscreenButton = () => {
 		};
 	}, []);
 
-	return <Button SvgIco={inFullscreen ? IconFullscreenExit : IconFullscreen} onClick={onClickHandler} class="ml-auto" />;
+	return <Button SvgIco={inFullscreen ? IconFullscreenExit : IconFullscreen} onClick={onClickHandler} />;
 };

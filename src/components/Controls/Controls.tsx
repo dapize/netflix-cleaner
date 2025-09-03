@@ -5,6 +5,8 @@ import { Metadata } from "../Metadata";
 import { PlayPauseButton } from "../PlayPauseButton";
 import { ProgressBar } from "../ProgressBar";
 import { SkipButtons } from "../SkipButtons";
+import { LanguagesButton } from "../LanguagesButton";
+import { VolumeButton } from "../VolumeButton";
 
 export const Controls = memo(() => {
 	return (
@@ -14,10 +16,12 @@ export const Controls = memo(() => {
 			</div>
 			<div class="absolute p-[30px] bottom-0 left-0 w-full">
 				<ProgressBar />
-				<div class="flex justify-start items-center mx-[-20px] gap-x-2">
+				<div class="flex justify-start items-center mx-[-20px] gap-x-1">
 					<PlayPauseButton />
+					<VolumeButton/>
 					<SkipButtons />
 					<Metadata />
+					<LanguagesButton/>
 					<FullscreenButton />
 				</div>
 			</div>

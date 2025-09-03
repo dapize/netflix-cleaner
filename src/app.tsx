@@ -57,16 +57,6 @@ export const App = () => {
 	}, [inWatchPage]);
 
 	useEffect(() => {
-		document.addEventListener("mousemove", showControls);
-		document.addEventListener("mouseenter", showControls);
-
-		return () => {
-			document.removeEventListener("mousemove", showControls);
-			document.removeEventListener("mouseenter", showControls);
-		};
-	}, []);
-
-	useEffect(() => {
 		if (!inWatchPage) {
 			setMetadata(undefined);
 			return;
@@ -75,17 +65,27 @@ export const App = () => {
 			const nodeTitle = await observerNode("h3.title");
 			setMetadata((currentState) => ({
 				subTitle: currentState?.subTitle as string,
-				title: nodeTitle.textContent,
+				title: nodeTitle?.textContent,
 			}));
 		})();
 		(async () => {
 			const nodeSubTitle = await observerNode("h4.playable-title");
 			setMetadata((currentState) => ({
-				subTitle: nodeSubTitle.textContent,
+				subTitle: nodeSubTitle?.textContent,
 				title: currentState?.title as string,
 			}));
 		})();
 	}, [inWatchPage]);
+
+	useEffect(() => {
+		document.addEventListener("mousemove", showControls);
+		document.addEventListener("mouseenter", showControls);
+
+		return () => {
+			document.removeEventListener("mousemove", showControls);
+			document.removeEventListener("mouseenter", showControls);
+		};
+	}, []);
 
 	if (!watchVideoNode || !videoNode || !inWatchPage) {
 		return;
