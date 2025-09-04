@@ -1,4 +1,4 @@
-import { memo } from "preact/compat";
+import { memo, useEffect } from "preact/compat";
 import { BackButton } from "../BackButton";
 import { FullscreenButton } from "../FullscreenButton";
 import { Metadata } from "../Metadata";
@@ -8,7 +8,7 @@ import { SkipButtons } from "../SkipButtons";
 import { LanguagesButton } from "../LanguagesButton";
 import { VolumeButton } from "../VolumeButton";
 
-export const Controls = memo(() => {
+export const Controls = memo(() => {	
 	return (
 		<>
 			<div class="absolute p-[30px] top-0 left-0 w-full">

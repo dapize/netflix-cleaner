@@ -37,6 +37,7 @@ export const PlayPauseButton = () => {
 		video.addEventListener("pause", setPlayToFalse);
 		video.addEventListener("play", setPlayToTrue);
 		document.addEventListener("keyup", pressSpaceKey);
+		setPlaying(!video.paused);
 
 		return () => {
 			video.removeEventListener("pause", setPlayToFalse);

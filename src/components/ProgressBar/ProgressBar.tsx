@@ -11,6 +11,7 @@ export const ProgressBar = () => {
 	const timeupdateHandler = useCallback(() => {
 		const video = videoNode as HTMLVideoElement;
 		const currentTime = video.currentTime;
+		if (isNaN(currentTime)) return;
 		const currentSecond = Math.floor(video.currentTime);
 		if (currentSecond !== lastSecond) {
 			setLastSecond(currentSecond);

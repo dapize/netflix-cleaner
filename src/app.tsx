@@ -62,18 +62,22 @@ export const App = () => {
 			return;
 		}
 		(async () => {
-			const nodeTitle = await observerNode("h3.title");
-			setMetadata((currentState) => ({
-				subTitle: currentState?.subTitle as string,
-				title: nodeTitle?.textContent,
-			}));
+			try {
+				const nodeTitle = await observerNode("h3.title", 15000);
+				setMetadata((currentState) => ({
+					subTitle: currentState?.subTitle as string,
+					title: nodeTitle?.textContent,
+				}));
+			} finally {}
 		})();
 		(async () => {
-			const nodeSubTitle = await observerNode("h4.playable-title");
-			setMetadata((currentState) => ({
-				subTitle: nodeSubTitle?.textContent,
-				title: currentState?.title as string,
-			}));
+			try {
+				const nodeSubTitle = await observerNode("h4.playable-title", 15000);
+				setMetadata((currentState) => ({
+					subTitle: nodeSubTitle?.textContent,
+					title: currentState?.title as string,
+				}));	
+			} finally {}
 		})();
 	}, [inWatchPage]);
 
