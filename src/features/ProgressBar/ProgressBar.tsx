@@ -32,10 +32,10 @@ export const ProgressBar = () => {
 
 	return (
 		<div class="flex justify-between items-center w-full">
-			<div class="h-[6px] bg-white/30 rounded-[3px] relative w-[calc(100%-70px)]">
+			<div class="h-[6px] bg-white/30 rounded-[3px] relative w-[calc(100%-90px)]">
 				<div class="h-full rounded-[3px] bg-[#e50914]" style={{ width: `${percentage}%` }}></div>
 			</div>
-			<span class="text-[22px] text-white shrink-0 w-[50px] flex justify-end items-center">{timeLeft}</span>
+			<span class="text-[20px] text-white shrink-0 w-[50px] flex justify-end items-center">{timeLeft}</span>
 		</div>
 	);
 };

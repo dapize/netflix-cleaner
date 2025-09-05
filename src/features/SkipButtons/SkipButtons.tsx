@@ -2,6 +2,7 @@ import IconGoLeft from "@assets/goLeft.svg?react";
 import IconGoRight from "@assets/goRight.svg?react";
 import { Button } from "@components/Button";
 import { type IMainContext, MainContext } from "@context/Main";
+import { Seek } from "@services/Seek";
 import { useCallback, useContext, useEffect } from "preact/hooks";
 
 export const SkipButtons = () => {
@@ -9,10 +10,11 @@ export const SkipButtons = () => {
 
 	const handleOnClick = (direction: "right" | "left") => {
 		const video = videoNode as HTMLVideoElement;
+		const ms = video.currentTime * 1000;
 		if (direction === "right") {
-			video.currentTime += 10;
+			Seek(ms + 10 * 1000);
 		} else {
-			video.currentTime -= 10;
+			Seek(ms - 10 * 1000);
 		}
 	};
 

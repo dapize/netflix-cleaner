@@ -47,6 +47,11 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
 						const findTrack = trackList.find((track) => track.trackId === trackId);
 						getPlayerVideo().setTextTrack(findTrack);
 					});
+
+					window.addEventListener("nc:set:seek:request", (event) => {
+						const msToGo = event.detail;
+						getPlayerVideo().seek(msToGo);
+					});
 				}
 			},
 		});
