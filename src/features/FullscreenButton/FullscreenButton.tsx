@@ -1,8 +1,8 @@
+import IconFullscreenExit from "@assets/exitFullscreen.svg?react";
+import IconFullscreen from "@assets/fullscreen.svg?react";
+import { Button } from "@components/Button";
+import { type IMainContext, MainContext } from "@context/Main";
 import { useCallback, useContext, useEffect, useState } from "preact/hooks";
-import IconFullscreenExit from "../../assets/exitFullscreen.svg?react";
-import IconFullscreen from "../../assets/fullscreen.svg?react";
-import { type IMainContext, MainContext } from "../../context/Main";
-import { Button } from "../Button";
 
 export const FullscreenButton = () => {
 	const { watchVideoNode } = useContext(MainContext) as IMainContext;

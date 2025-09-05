@@ -30,6 +30,23 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
 						const findTrack = trackList.find((track) => track.trackId === trackId);
 						getPlayerVideo().setAudioTrack(findTrack);
 					});
+
+					window.addEventListener("nc:get:subtitleTrackList:request", () => {
+						const videoPlayer = getPlayerVideo();
+						const currentTrack = videoPlayer.getTextTrack();
+						const trackList = videoPlayer.getTextTrackList().map((track) => ({
+							...track,
+							active: track.trackId === currentTrack.trackId,
+						}));
+						window.dispatchEvent(new CustomEvent("nc:get:subtitleTrackList:response", { detail: trackList }));
+					});
+
+					window.addEventListener("nc:set:subtitleTrack:request", (event) => {
+						const trackId = event.detail;
+						const trackList = getPlayerVideo().getTextTrackList();
+						const findTrack = trackList.find((track) => track.trackId === trackId);
+						getPlayerVideo().setTextTrack(findTrack);
+					});
 				}
 			},
 		});

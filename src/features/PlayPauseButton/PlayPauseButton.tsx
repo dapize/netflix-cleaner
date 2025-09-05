@@ -1,8 +1,8 @@
+import IconPause from "@assets/pause.svg?react";
+import IconPlay from "@assets/play.svg?react";
+import { Button } from "@components/Button";
+import { type IMainContext, MainContext } from "@context/Main";
 import { useContext, useEffect, useState } from "preact/hooks";
-import IconPause from "../../assets/pause.svg?react";
-import IconPlay from "../../assets/play.svg?react";
-import { type IMainContext, MainContext } from "../../context/Main";
-import { Button } from "../Button";
 
 export const PlayPauseButton = () => {
 	const { videoNode } = useContext(MainContext) as IMainContext;

@@ -2,6 +2,6 @@
 
 /* biome-ignore lint/suspicious/noUnknownAtRules: TailwindCSS V4 */
 @theme {
-  --spacing: 4px;
-  --text-base: 16px;
+	--spacing: 4px;
+	--text-base: 16px;
 }

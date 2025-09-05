@@ -1,6 +1,6 @@
 import { useContext, useEffect, useRef, useState } from "preact/hooks";
-import { Controls } from "./components/Controls";
 import { type IMainContext, MainContext } from "./context/Main";
+import { Controls } from "./features/Controls";
 import { overPlayVideo } from "./helpers/overPlayVideo";
 import { observerNode } from "./utils/observerNode";
 
@@ -68,7 +68,8 @@ export const App = () => {
 					subTitle: currentState?.subTitle as string,
 					title: nodeTitle?.textContent,
 				}));
-			} finally {}
+			} finally {
+			}
 		})();
 		(async () => {
 			try {
@@ -76,8 +77,9 @@ export const App = () => {
 				setMetadata((currentState) => ({
 					subTitle: nodeSubTitle?.textContent,
 					title: currentState?.title as string,
-				}));	
-			} finally {}
+				}));
+			} finally {
+			}
 		})();
 	}, [inWatchPage]);
 

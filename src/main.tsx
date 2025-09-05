@@ -17,14 +17,6 @@ const shadowRoot = container.attachShadow({ mode: "open" });
 injectStyle(indexRawCss, document.body);
 injectStyle(appRawCss, shadowRoot);
 
-window.addEventListener("message", (event) => {
-  if (event.source !== window) return;
-  if (event.data.type === "NETFLIX_DATA") {
-    console.log("Netflix data recibida:", event.data.value);
-    (window as any).pv = event.data.value;
-  }
-});
-
 render(
 	<MainProvider>
 		<App />

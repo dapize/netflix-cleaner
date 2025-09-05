@@ -5,7 +5,7 @@ export const observerNode = (match: string, timeOut?: number): Promise<Element> 
 		if (timeOut) {
 			idTimeOut = setTimeout(() => {
 				reject();
-			}, timeOut)
+			}, timeOut);
 		}
 
 		let findNode = document.querySelector(match);

@@ -1,6 +1,6 @@
+import { type IMainContext, MainContext } from "@context/Main";
+import { formatLeftTime } from "@utils/formatLeftTime";
 import { useCallback, useContext, useEffect, useState } from "preact/hooks";
-import { type IMainContext, MainContext } from "../../context/Main";
-import { formatLeftTime } from "../../utils/formatLeftTime";
 
 export const ProgressBar = () => {
 	const { videoNode } = useContext(MainContext) as IMainContext;
@@ -11,7 +11,7 @@ export const ProgressBar = () => {
 	const timeupdateHandler = useCallback(() => {
 		const video = videoNode as HTMLVideoElement;
 		const currentTime = video.currentTime;
-		if (isNaN(currentTime)) return;
+		if (Number.isNaN(currentTime)) return;
 		const currentSecond = Math.floor(video.currentTime);
 		if (currentSecond !== lastSecond) {
 			setLastSecond(currentSecond);
@@ -31,7 +31,7 @@ export const ProgressBar = () => {
 	}, []);
 
 	return (
-		<div class="flex justify-between items-center w-full mb-1">
+		<div class="flex justify-between items-center w-full">
 			<div class="h-[6px] bg-white/30 rounded-[3px] relative w-[calc(100%-70px)]">
 				<div class="h-full rounded-[3px] bg-[#e50914]" style={{ width: `${percentage}%` }}></div>
 			</div>

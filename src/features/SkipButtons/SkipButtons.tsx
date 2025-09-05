@@ -1,8 +1,8 @@
+import IconGoLeft from "@assets/goLeft.svg?react";
+import IconGoRight from "@assets/goRight.svg?react";
+import { Button } from "@components/Button";
+import { type IMainContext, MainContext } from "@context/Main";
 import { useCallback, useContext, useEffect } from "preact/hooks";
-import IconGoLeft from "../../assets/goLeft.svg?react";
-import IconGoRight from "../../assets/goRight.svg?react";
-import { type IMainContext, MainContext } from "../../context/Main";
-import { Button } from "../Button";
 
 export const SkipButtons = () => {
 	const { videoNode } = useContext(MainContext) as IMainContext;
