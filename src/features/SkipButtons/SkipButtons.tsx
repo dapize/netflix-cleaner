@@ -26,9 +26,9 @@ export const SkipButtons = () => {
 	}, []);
 
 	useEffect(() => {
-		document.addEventListener("keyup", pressArrowKey);
+		document.addEventListener("keydown", pressArrowKey);
 		return () => {
-			document.removeEventListener("keyup", pressArrowKey);
+			document.removeEventListener("keydown", pressArrowKey);
 		};
 	}, []);
 
