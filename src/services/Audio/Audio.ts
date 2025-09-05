@@ -1,23 +1,30 @@
 import type { IAudioTrack } from "./Audio.d";
 
-export const getAudioTrackList = (): Promise<IAudioTrack[]> => {
-  return new Promise((resolve) => {
-    const getTrackList = (event: CustomEvent<IAudioTrack[]>) => {
-      window.removeEventListener('netflixCCleaner:set:audioTrackList', getTrackList as EventListener);
-      resolve(event.detail);
-    }
-    window.addEventListener('netflixCCleaner:set:audioTrackList', getTrackList as EventListener);
-    window.dispatchEvent(new CustomEvent("netflixCCleaner:get:audioTrackList"));
-  });
-}
+export const getAudioTrack = (): Promise<IAudioTrack["trackId"]> => {
+	return new Promise((resolve) => {
+		const getTrack = (event: CustomEvent<string>) => {
+			window.removeEventListener("nc:get:audioTrack:response", getTrack as EventListener);
+			resolve(event.detail);
+		};
+		window.addEventListener("nc:get:audioTrack:response", getTrack as EventListener);
+		window.dispatchEvent(new CustomEvent("nc:get:audioTrack:request"));
+	});
+};
 
-export const setAudioTrack = async (track: IAudioTrack): Promise<void> => {
-  return new Promise((resolve) => {
-    const getTrack = () => {
-      window.removeEventListener('netflixCCleaner:get:audioTrack', getTrack as EventListener);
-      resolve();
-    }
-    window.addEventListener('netflixCCleaner:get:audioTrack', getTrack as EventListener);
-    window.dispatchEvent(new CustomEvent("netflixCCleaner:set:audioTrack", { detail: track }));
-  });
-}
+export const getAudioTrackList = (): Promise<IAudioTrack[]> => {
+	return new Promise((resolve) => {
+		const getTrackList = (event: CustomEvent<IAudioTrack[]>) => {
+			window.removeEventListener("nc:get:audioTrackList:response", getTrackList as EventListener);
+			resolve(event.detail);
+		};
+		window.addEventListener("nc:get:audioTrackList:response", getTrackList as EventListener);
+		window.dispatchEvent(new CustomEvent("nc:get:audioTrackList:request"));
+	});
+};
+
+export const setAudioTrack = async (trackId: string): Promise<void> => {
+	return new Promise((resolve) => {
+		window.dispatchEvent(new CustomEvent("nc:set:audioTrack:request", { detail: trackId }));
+		resolve();
+	});
+};

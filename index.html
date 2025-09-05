@@ -81,16 +81,43 @@
                   getAudioTrackList: () => {
                     return [{ "trackId": "A:2:1;2;es;0;0;", "bcp47": "es", "displayName": "Español", "trackType": "PRIMARY", "rawTrackType": "PRIMARY", "channels": "2.0", "isNative": false, "surroundFormatLabel": "2.0" }, { "trackId": "A:2:1;2;es-ES;0;0;", "bcp47": "es-ES", "displayName": "Español (España)", "trackType": "PRIMARY", "rawTrackType": "PRIMARY", "channels": "2.0", "isNative": false, "surroundFormatLabel": "2.0" }, { "trackId": "A:2:1;2;en;1;0;", "bcp47": "en", "displayName": "Inglés [Original]", "trackType": "PRIMARY", "rawTrackType": "PRIMARY", "channels": "2.0", "isNative": true, "surroundFormatLabel": "2.0" }, { "trackId": "A:2:1;2;pt-BR;0;0;", "bcp47": "pt-BR", "displayName": "Portugués (Brasil)", "trackType": "PRIMARY", "rawTrackType": "PRIMARY", "channels": "2.0", "isNative": false, "surroundFormatLabel": "2.0" }, { "trackId": "A:2:1;2;it;0;0;", "bcp47": "it", "displayName": "Italiano", "trackType": "PRIMARY", "rawTrackType": "PRIMARY", "channels": "2.0", "isNative": false, "surroundFormatLabel": "2.0" }, { "trackId": "A:2:1;2;fr;0;0;", "bcp47": "fr", "displayName": "Francés", "trackType": "PRIMARY", "rawTrackType": "PRIMARY", "channels": "2.0", "isNative": false, "surroundFormatLabel": "2.0" }, { "trackId": "A:2:1;2;de;0;0;", "bcp47": "de", "displayName": "Alemán", "trackType": "PRIMARY", "rawTrackType": "PRIMARY", "channels": "2.0", "isNative": false, "surroundFormatLabel": "2.0" }, { "trackId": "A:2:2;2;en;0;0;", "bcp47": "en", "displayName": "Inglés - Audio descriptivo", "trackType": "ASSISTIVE", "rawTrackType": "ASSISTIVE", "channels": "2.0", "isNative": false, "surroundFormatLabel": "2.0" }, { "trackId": "A:2:1;2;ja;0;0;", "bcp47": "ja", "displayName": "Japonés", "trackType": "PRIMARY", "rawTrackType": "PRIMARY", "channels": "2.0", "isNative": false, "surroundFormatLabel": "2.0" }, { "trackId": "A:2:1;2;pl;0;0;", "bcp47": "pl", "displayName": "Polaco", "trackType": "PRIMARY", "rawTrackType": "PRIMARY", "channels": "2.0", "isNative": false, "surroundFormatLabel": "2.0" }, { "trackId": "A:2:1;2;ru;0;0;", "bcp47": "ru", "displayName": "Ruso", "trackType": "PRIMARY", "rawTrackType": "PRIMARY", "channels": "2.0", "isNative": false, "surroundFormatLabel": "2.0" }, { "trackId": "A:2:1;2;th;0;0;", "bcp47": "th", "displayName": "Tailandés", "trackType": "PRIMARY", "rawTrackType": "PRIMARY", "channels": "2.0", "isNative": false, "surroundFormatLabel": "2.0" }, { "trackId": "A:2:1;2;tr;0;0;", "bcp47": "tr", "displayName": "Turco", "trackType": "PRIMARY", "rawTrackType": "PRIMARY", "channels": "2.0", "isNative": false, "surroundFormatLabel": "2.0" }]
                   },
-                  setAudioTrack: async (track) => {
-                    console.log('Audio cambiado: ', track.displayName);
-                  }
+                  setAudioTrack: (track) => {
+                    return new Promise((resolve) => {
+                      setTimeout(() => {
+                        console.log('Audio cambiado: ', track);
+                        resolve();
+                      }, 500)
+                    });
+                  },
+                  getAudioTrack: () => ({ "trackId": "A:2:1;2;es;0;0;", "bcp47": "es", "displayName": "Español", "trackType": "PRIMARY", "rawTrackType": "PRIMARY", "channels": "2.0", "isNative": false, "surroundFormatLabel": "2.0" })
                 })
               }
             })
           }
         }
       }
-    }
+    };
+
+    const getPlayerVideo = () => {
+      const playerApp = window.netflix.appContext.state.playerApp;
+      const playerAPI = playerApp.getAPI().videoPlayer;
+      const sessionId = playerAPI.getAllPlayerSessionIds()[0];
+      return playerAPI.getVideoPlayerBySessionId(sessionId);
+    };
+
+    window.addEventListener("nc:get:audioTrackList:request", () => {
+      const videoPlayer = getPlayerVideo();
+      const currentTrack = videoPlayer.getAudioTrack();
+      const trackList = videoPlayer.getAudioTrackList().map((track) => ({
+        ...track,
+        active: track.trackId === currentTrack.trackId,
+      }));
+      window.dispatchEvent(new CustomEvent("nc:get:audioTrackList:response", { detail: trackList }));
+    });
+
+    window.addEventListener("nc:set:audioTrack:request", async (event) => {
+      await getPlayerVideo().setAudioTrack(event.detail);
+    })
   </script>
 </head>
 

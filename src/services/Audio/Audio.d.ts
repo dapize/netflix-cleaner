@@ -1,3 +1,5 @@
 export interface IAudioTrack {
-  displayName: string;
+	displayName: string;
+	trackId: string;
+	active: boolean;
 }

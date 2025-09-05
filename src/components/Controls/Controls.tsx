@@ -1,14 +1,14 @@
-import { memo, useEffect } from "preact/compat";
+import { memo } from "preact/compat";
 import { BackButton } from "../BackButton";
 import { FullscreenButton } from "../FullscreenButton";
+import { LanguagesButton } from "../LanguagesButton";
 import { Metadata } from "../Metadata";
 import { PlayPauseButton } from "../PlayPauseButton";
 import { ProgressBar } from "../ProgressBar";
 import { SkipButtons } from "../SkipButtons";
-import { LanguagesButton } from "../LanguagesButton";
 import { VolumeButton } from "../VolumeButton";
 
-export const Controls = memo(() => {	
+export const Controls = memo(() => {
 	return (
 		<>
 			<div class="absolute p-[30px] top-0 left-0 w-full">
@@ -18,10 +18,10 @@ export const Controls = memo(() => {
 				<ProgressBar />
 				<div class="flex justify-start items-center mx-[-20px] gap-x-1">
 					<PlayPauseButton />
-					<VolumeButton/>
+					<VolumeButton />
 					<SkipButtons />
 					<Metadata />
-					<LanguagesButton/>
+					<LanguagesButton />
 					<FullscreenButton />
 				</div>
 			</div>

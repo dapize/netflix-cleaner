@@ -1,79 +1,79 @@
+/** biome-ignore-all lint/a11y/useKeyWithClickEvents: No necesario */
+import { useEffect, useRef, useState } from "preact/hooks";
+import IconCheck from "../../assets/check.svg?react";
+import IconClose from "../../assets/close.svg?react";
+import IconLanguages from "../../assets/languages.svg?react";
+import { getAudioTrackList, type IAudioTrack, setAudioTrack } from "../../services/Audio";
 import { Button } from "../Button";
-import IconLanguages from '../../assets/languages.svg?react';
-import { useCallback, useEffect, useRef, useState } from "preact/hooks";
-import { getAudioTrackList, setAudioTrack, type IAudioTrack } from "../../services/Audio";
 
 export const LanguagesButton = () => {
-  const [showList, setShowList] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
-  const [audioTrackList, setAudioTrackList] = useState<IAudioTrack[]>([]);
-  const refDisplay = useRef<boolean>(false);
+	const [showList, setShowList] = useState(false);
+	const [audioTrackList, setAudioTrackList] = useState<IAudioTrack[]>([]);
+	const refDisplay = useRef<boolean>(false);
 
-  const onClickHandler = () => {
-    refDisplay.current = true;
-    setShowList(true);
-  }
+	const onClickHandler = () => {
+		refDisplay.current = true;
+		setShowList(true);
+	};
 
-  const setNewAudio = async (track: IAudioTrack) => {
-    try {
-      await setAudioTrack(track);
-    } catch (error) {
-      throw new Error('Ocurrió un error al cambiar de idioma');
-    }
-  }
+	const close = () => {
+		refDisplay.current = false;
+		setShowList(false);
+	};
 
-  const handleClickOutside = useCallback((event: MouseEvent) => {
-    if(!refDisplay.current) {
-      return;
-    };
-    if (ref.current && !ref.current.contains(event.target as Node)) {
-      refDisplay.current = false;
-      setShowList(false);
-    }
-  }, [showList])
+	const setNewAudio = async (trackId: string) => {
+		setAudioTrack(trackId);
+		setAudioTrackList((list) => list.map((item) => ({ ...item, active: item.trackId === trackId })));
+		close();
+	};
 
-  useEffect(() => {
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, []);
+	useEffect(() => {
+		if (!audioTrackList.length && showList) {
+			(async () => {
+				const newList = await getAudioTrackList();
+				setAudioTrackList(newList);
+			})();
+		}
+	}, [showList]);
 
-  useEffect(() => {
-    if (!audioTrackList.length && showList) {
-      (async () => {
-        try {
-          const newList = await getAudioTrackList();
-          setAudioTrackList(newList);
-        } catch (error) {
-          throw new Error('Error obteniendo el audio track list');
-        }
-      })();
-    }
-  }, [showList]);
-  
-  return (
-    <>
-      <div ref={ref} class={`absolute bottom-[115px] right-[80px] w-[500px] h-[260px] pointer-events-auto after:content-[''] after:block after:w-[0] after:h-[0] after:absolute after:bottom-[-16px] after:right-[18px] after:[border-left:14px_solid_transparent] after:[border-right:14px_solid_transparent] after:[border-top:16px_solid_rgba(63,65,69,0.90)] ${showList ? 'flex' : 'hidden'}`}>
-        <div class="w-1/2 bg-[#27292D]/90 rounded-tl-md rounded-bl-md">
-          <h5 class="mt-0 font-medium text-white text-xl px-6 py-4">Audio</h5>
-          <ul class="text-[#A3A1A2] text-lx max-h-[180px] overflow-y-auto [&::-webkit-scrollbar]:[width:5px] [&::-webkit-scrollbar-thumb]:bg-white">
-            {audioTrackList.map(track => (
-              <li class="transition-colors py-2 hover:text-white hover:cursor-pointer hover:bg-[#27292D]/95 px-6" onClick={() => setNewAudio(track)}>{track.displayName}</li>
-            ))}
-          </ul>
-        </div>
+	return (
+		<>
+			<div
+				class={`absolute bottom-[115px] right-[80px] w-[520px] h-[260px] pointer-events-auto after:content-[''] after:block after:w-[0] after:h-[0] after:absolute after:bottom-[-16px] after:right-[18px] after:[border-left:14px_solid_transparent] after:[border-right:14px_solid_transparent] after:[border-top:16px_solid_rgba(63,65,69,0.90)] ${showList ? "flex" : "hidden"}`}
+			>
+				<div class="w-1/2 bg-[#27292D]/90 rounded-tl-md rounded-bl-md">
+					<h5 class="mt-0 font-medium text-white text-xl! pr-5 pl-[48px] py-3">Audio</h5>
+					<ul class="max-h-[180px] overflow-y-auto [&::-webkit-scrollbar]:[width:5px] [&::-webkit-scrollbar-thumb]:bg-[#787878]">
+						{audioTrackList.map((track) => (
+							<li
+								class={`text-base transition-colors py-1.5 hover:text-white hover:cursor-pointer hover:bg-[#27292D]/95 px-5 flex justify-start items-center gap-x-3 ${track.active ? "text-white" : "text-[#A3A1A2]"}`}
+								onClick={() => setNewAudio(track.trackId)}
+							>
+								{track.active ? <IconCheck /> : <span class="h-[16px] w-[16px]"></span>}
+								{track.displayName}
+							</li>
+						))}
+					</ul>
+				</div>
 
-        <div class="w-1/2 bg-[#3F4145]/90 px-6 py-4 rounded-tr-md rounded-br-md">
-          <h5 class="mb-4 mt-0 font-medium text-white text-xl">Subtitulos</h5>
-          <ul class="text-[#A3A1A2] text-lg flex flex-col justify-start items-start gap-y-2">
-            <li>Ingles</li>
-            <li>Español</li>
-            <li>Portugues</li>
-          </ul>
-        </div>
-      </div>
-      <Button SvgIco={IconLanguages} onClick={onClickHandler}/>
-    </>
-  );
-}
+				<div class="w-1/2 bg-[#3F4145]/90 px-6 py-4 rounded-tr-md rounded-br-md">
+					<h5 class="mb-4 mt-0 font-medium text-white text-xl">Subtitulos</h5>
+					<ul class="text-[#A3A1A2] text-lg flex flex-col justify-start items-start gap-y-2">
+						<li>Ingles</li>
+						<li>Español</li>
+						<li>Portugues</li>
+					</ul>
+				</div>
+
+				<button
+					type="button"
+					class="bg-white border-0 outline-0 w-[30px] h-[30px] flex justify-center items-center absolute top-[-12px] right-[-12px] rounded-[50%] cursor-pointer opacity-95"
+					onClick={close}
+				>
+					<IconClose class="w-[16px] h-[16px]" fill="black" />
+				</button>
+			</div>
+			<Button SvgIco={IconLanguages} onClick={onClickHandler} />
+		</>
+	);
+};
