@@ -4,11 +4,11 @@
 
 # Netflix Cleaner
 
-Extensión para eliminar el molesto modal de "fuera de la red doméstica" en Netflix, reanudar automáticamente el video y reemplazar los controles ocultos con una interfaz personalizada.
+Extensión para eliminar el molesto modal de "Tu dispositivo no forma parte del Hogar con Netflix de esta cuenta", reanudar automáticamente el video y reemplazar los controles ocultos con una interfaz personalizada.
 
 ---
 <details>
-<summary>el modal de "fuera de la red doméstica"</summary>
+<summary>el modal de "Tu dispositivo no forma parte del Hogar con Netflix de esta cuenta"</summary>
 <img src="modal-netflix.png"/>
 </details>
 
