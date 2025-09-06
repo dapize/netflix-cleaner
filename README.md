@@ -63,8 +63,8 @@ bun run build
 ```
 
 Esto hace lo siguiente:
-- Compila el archivo `src/content.ts` con Bun
-- Copia los archivos estáticos desde `public/` hacia `package/`
+- Compila el archivo `src/main.ts` con Bun
+- Copia los archivos estáticos hacia `package/`
 
 > La carpeta `package/` es la que se debe cargar en el navegador
 
