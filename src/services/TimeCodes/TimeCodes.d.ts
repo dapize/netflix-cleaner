@@ -6,5 +6,6 @@ export interface ICodes {
 export interface ITimeCodes {
 	start: ICodes;
 	ending: ICodes;
-	skip_credits: ICodes;
+	skip_credits?: ICodes;
+	recap?: ICodes;
 }

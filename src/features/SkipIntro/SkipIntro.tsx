@@ -10,16 +10,20 @@ export const SkipIntro = () => {
 
 	const handleOnClick = () => {
 		setShow(false);
-		Seek(timeCodesRef.current!.skip_credits.endOffsetMs);
+		const timeCodes = timeCodesRef.current!;
+		const msToGo = timeCodes.skip_credits ? timeCodes.skip_credits.endOffsetMs : timeCodes.recap!.endOffsetMs;
+		Seek(msToGo);
 	};
 
 	useEffect(() => {
 		const timeupdateHandler = () => {
-			if (!timeCodesRef.current) return;
+			const timeCodes = timeCodesRef.current;
+			if (!timeCodes) return;
 			const video = videoNode as HTMLVideoElement;
 			const msCurrentTime = video.currentTime * 1000;
-			const msToShowButton = timeCodesRef.current.skip_credits.startOffsetMs;
-			const msToHideButton = timeCodesRef.current.skip_credits.endOffsetMs;
+			const msToShowButton = timeCodes.skip_credits ? timeCodes.skip_credits.startOffsetMs : timeCodes.recap!.startOffsetMs;
+			const msToHideButton = timeCodes.skip_credits ? timeCodes.skip_credits.endOffsetMs : timeCodes.recap!.endOffsetMs;
+
 			if (msCurrentTime >= msToShowButton && msCurrentTime <= msToHideButton) {
 				setShow(true);
 			}
