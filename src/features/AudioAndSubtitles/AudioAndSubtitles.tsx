@@ -29,8 +29,9 @@ export const AudioAndSubtitles = () => {
 	};
 
 	const onClickHandler = () => {
-		refDisplay.current = true;
-		setShowList(true);
+		const newState = !showList;
+		refDisplay.current = newState;
+		setShowList(newState);
 	};
 
 	useEffect(() => {

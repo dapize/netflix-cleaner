@@ -1,3 +1,4 @@
+import { SkipIntro } from "@features/SkipIntro";
 import { useContext, useEffect, useRef, useState } from "preact/hooks";
 import { type IMainContext, MainContext } from "./context/Main";
 import { Controls } from "./features/Controls";
@@ -98,10 +99,13 @@ export const App = () => {
 	}
 
 	return (
-		<div
-			class={`fixed top-0 left-0 h-screen w-screen pointer-events-none z-999 bg-[linear-gradient(to_bottom,rgba(0,0,0,0.7)_0%,rgba(0,0,0,0)_20%,rgba(0,0,0,0)_80%,rgba(0,0,0,0.7)_100%)] delay-300 transition-opacity opacity-0 ${visible ? "opacity-[1]" : ""}`}
-		>
-			<Controls />
-		</div>
+		<>
+			<div
+				class={`fixed top-0 left-0 h-screen w-screen pointer-events-none z-999 bg-[linear-gradient(to_bottom,rgba(0,0,0,0.7)_0%,rgba(0,0,0,0)_20%,rgba(0,0,0,0)_80%,rgba(0,0,0,0.7)_100%)] delay-300 transition-opacity opacity-0 ${visible ? "opacity-[1]" : ""}`}
+			>
+				<Controls />
+			</div>
+			<SkipIntro />
+		</>
 	);
 };

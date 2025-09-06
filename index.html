@@ -101,7 +101,8 @@
                   seek: (ms) => {
                     const video = document.querySelector('.watch-video video');
                     video.currentTime = ms / 1000
-                  }
+                  },
+                  getTimeCodes: () => ([{ "type": "start", "startOffsetMs": 1042, "endOffsetMs": 1042, "Hcc": 1042, "sba": 1042 }, { "type": "ending", "startOffsetMs": 2597261, "endOffsetMs": 2597261, "Hcc": 2597261, "sba": 2597261 }, { "type": "skip_credits", "startOffsetMs": 94469, "endOffsetMs": 122455, "Hcc": 122455, "sba": 94469 }])
                 })
               }
             })
@@ -154,6 +155,18 @@
     window.addEventListener("nc:set:seek:request", (event) => {
       const msToGo = event.detail;
       getPlayerVideo().seek(msToGo);
+    });
+
+    window.addEventListener("nc:get:timeCodes:request", () => {
+      const rawTimeCodes = getPlayerVideo().getTimeCodes();
+      const timeCodes = {};
+      rawTimeCodes.forEach((item) => {
+        const { type, ...rest } = item;
+        timeCodes[type] = {
+          ...rest,
+        };
+      });
+      window.dispatchEvent(new CustomEvent("nc:get:timeCodes:response", { detail: timeCodes }));
     });
   </script>
 </head>

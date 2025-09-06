@@ -52,6 +52,18 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
 						const msToGo = event.detail;
 						getPlayerVideo().seek(msToGo);
 					});
+
+					window.addEventListener("nc:get:timeCodes:request", () => {
+						const rawTimeCodes = getPlayerVideo().getTimeCodes();
+						const timeCodes = {};
+						rawTimeCodes.forEach((item) => {
+							const { type, ...rest } = item;
+							timeCodes[type] = {
+								...rest,
+							};
+						});
+						window.dispatchEvent(new CustomEvent("nc:get:timeCodes:response", { detail: timeCodes }));
+					});
 				}
 			},
 		});
