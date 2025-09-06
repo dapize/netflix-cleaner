@@ -12,4 +12,6 @@ export interface IMainContext {
 	setVideoNode: Dispatch<StateUpdater<undefined | HTMLVideoElement>>;
 	metadata: undefined | IMetadata;
 	setMetadata: Dispatch<StateUpdater<undefined | IMetadata>>;
+	showControls: boolean;
+	setShowControls: Dispatch<StateUpdater<boolean>>;
 }

@@ -6,19 +6,20 @@ import { overPlayVideo } from "./helpers/overPlayVideo";
 import { observerNode } from "./utils/observerNode";
 
 export const App = () => {
-	const { setWatchVideoNode, setVideoNode, videoNode, watchVideoNode, setMetadata } = useContext(MainContext) as IMainContext;
+	const { setWatchVideoNode, setVideoNode, videoNode, watchVideoNode, setMetadata, showControls, setShowControls } = useContext(
+		MainContext,
+	) as IMainContext;
 	const [inWatchPage, setInWatchPage] = useState(false);
-	const [visible, setVisible] = useState(false);
 	const controlsTimeout = useRef<null | ReturnType<typeof setTimeout>>(null);
 
-	const showControls = () => {
-		setVisible(true);
+	const handleShowControls = () => {
+		setShowControls(true);
 		if (controlsTimeout.current) {
 			clearTimeout(controlsTimeout.current);
 		}
 		controlsTimeout.current = setTimeout(() => {
 			if (!videoNode?.paused) {
-				setVisible(false);
+				setShowControls(false);
 			}
 		}, 3000);
 	};
@@ -85,12 +86,12 @@ export const App = () => {
 	}, [inWatchPage]);
 
 	useEffect(() => {
-		document.addEventListener("mousemove", showControls);
-		document.addEventListener("mouseenter", showControls);
+		document.addEventListener("mousemove", handleShowControls);
+		document.addEventListener("mouseenter", handleShowControls);
 
 		return () => {
-			document.removeEventListener("mousemove", showControls);
-			document.removeEventListener("mouseenter", showControls);
+			document.removeEventListener("mousemove", handleShowControls);
+			document.removeEventListener("mouseenter", handleShowControls);
 		};
 	}, []);
 
@@ -101,7 +102,7 @@ export const App = () => {
 	return (
 		<>
 			<div
-				class={`fixed top-0 left-0 h-screen w-screen pointer-events-none z-999 bg-[linear-gradient(to_bottom,rgba(0,0,0,0.7)_0%,rgba(0,0,0,0)_20%,rgba(0,0,0,0)_80%,rgba(0,0,0,0.7)_100%)] delay-300 transition-opacity opacity-0 ${visible ? "opacity-[1]" : ""}`}
+				class={`fixed top-0 left-0 h-screen w-screen pointer-events-none z-999 bg-[linear-gradient(to_bottom,rgba(0,0,0,0.7)_0%,rgba(0,0,0,0)_20%,rgba(0,0,0,0)_80%,rgba(0,0,0,0.7)_100%)] delay-300 transition-opacity opacity-0 ${showControls ? "opacity-[1]" : ""}`}
 			>
 				<Controls />
 			</div>

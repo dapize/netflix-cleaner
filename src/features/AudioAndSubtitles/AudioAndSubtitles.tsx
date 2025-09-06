@@ -1,7 +1,8 @@
 import IconLanguages from "@assets/languages.svg?react";
 import { Button } from "@components/Button";
+import { type IMainContext, MainContext } from "@context/Main";
 import { getAudioTrackList, getSubtitleTrackList, type ILanguageTrack, setAudioTrack, setSubtitleTrack } from "@services/LanguageTracks";
-import { useEffect, useRef, useState } from "preact/hooks";
+import { useContext, useEffect, useRef, useState } from "preact/hooks";
 import { CloseButton } from "./components/CloseButton";
 import { LanguagesList } from "./components/LanguagesList";
 
@@ -10,6 +11,7 @@ export const AudioAndSubtitles = () => {
 	const [audioTrackList, setAudioTrackList] = useState<ILanguageTrack[]>([]);
 	const [subtitleTrackList, setSubtitleTrackList] = useState<ILanguageTrack[]>([]);
 	const refDisplay = useRef<boolean>(false);
+	const { showControls } = useContext(MainContext) as IMainContext;
 
 	const closeLanguages = () => {
 		refDisplay.current = false;
@@ -28,8 +30,7 @@ export const AudioAndSubtitles = () => {
 		closeLanguages();
 	};
 
-	const onClickHandler = () => {
-		const newState = !showList;
+	const handleShowList = (newState: boolean) => {
 		refDisplay.current = newState;
 		setShowList(newState);
 	};
@@ -52,6 +53,12 @@ export const AudioAndSubtitles = () => {
 		}
 	}, [showList]);
 
+	useEffect(() => {
+		if (!showControls) {
+			handleShowList(false);
+		}
+	}, [showControls]);
+
 	return (
 		<>
 			<div
@@ -61,7 +68,7 @@ export const AudioAndSubtitles = () => {
 				<LanguagesList title="Subtitulos" bgColor="bg-[#3F4145]/90" items={subtitleTrackList} onClickItem={setTrackSubtitle} />
 				<CloseButton onClick={closeLanguages} />
 			</div>
-			<Button SvgIco={IconLanguages} onClick={onClickHandler} />
+			<Button SvgIco={IconLanguages} onClick={() => handleShowList(!showList)} />
 		</>
 	);
 };
