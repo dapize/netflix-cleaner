@@ -1,21 +1,41 @@
 {
-	"manifest_version": 3,
-	"name": "Netflix Cleaner",
-	"version": "0.1",
-	"description": "Elimina el modal, reanuda el video y a\u00f1ade controles id\u00e9nticos a Netflix, con \u00edconos din\u00e1micos y estilos blancos.",
-	"permissions": ["scripting", "tabs"],
-	"host_permissions": ["https://www.netflix.com/*"],
-	"background": {
-		"service_worker": "background.js"
-	},
-	"content_scripts": [
-		{
-			"matches": ["https://www.netflix.com/*"],
-			"js": ["content.js"],
-			"run_at": "document_idle"
-		}
-	],
-	"action": {
-		"default_title": "Netflix Cleaner"
-	}
+  "manifest_version": 3,
+  "name": "Netflix Cleaner",
+  "version": "1.0",
+  "description": "Elimina el modal, reanuda el video y a\u00f1ade controles id\u00e9nticos a Netflix, con \u00edconos din\u00e1micos y estilos blancos.",
+  "permissions": [
+    "scripting",
+    "tabs",
+    "activeTab"
+  ],
+  "host_permissions": [
+    "https://www.netflix.com/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://www.netflix.com/*"
+      ],
+      "js": [
+        "content.js"
+      ],
+      "run_at": "document_idle"
+    }
+  ],
+  "action": {
+    "default_title": "Netflix Cleaner",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  }
 }

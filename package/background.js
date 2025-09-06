@@ -1,1 +1,71 @@
-// No se usa por ahora
+chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+	if (tab.url?.startsWith("https://www.netflix.com") && changeInfo.status === "complete") {
+		chrome.scripting.executeScript({
+			target: { tabId },
+			world: "MAIN",
+			func: () => {
+				if (window.netflix && !window.netflixAttached) {
+					window.netflixAttached = true;
+
+					const getPlayerVideo = () => {
+						const playerApp = window.netflix.appContext.state.playerApp;
+						const playerAPI = playerApp.getAPI().videoPlayer;
+						const sessionId = playerAPI.getAllPlayerSessionIds()[0];
+						return playerAPI.getVideoPlayerBySessionId(sessionId);
+					};
+
+					window.addEventListener("nc:get:audioTrackList:request", () => {
+						const videoPlayer = getPlayerVideo();
+						const currentTrack = videoPlayer.getAudioTrack();
+						const trackList = videoPlayer.getAudioTrackList().map((track) => ({
+							...track,
+							active: track.trackId === currentTrack.trackId,
+						}));
+						window.dispatchEvent(new CustomEvent("nc:get:audioTrackList:response", { detail: trackList }));
+					});
+
+					window.addEventListener("nc:set:audioTrack:request", (event) => {
+						const trackId = event.detail;
+						const trackList = getPlayerVideo().getAudioTrackList();
+						const findTrack = trackList.find((track) => track.trackId === trackId);
+						getPlayerVideo().setAudioTrack(findTrack);
+					});
+
+					window.addEventListener("nc:get:subtitleTrackList:request", () => {
+						const videoPlayer = getPlayerVideo();
+						const currentTrack = videoPlayer.getTextTrack();
+						const trackList = videoPlayer.getTextTrackList().map((track) => ({
+							...track,
+							active: track.trackId === currentTrack.trackId,
+						}));
+						window.dispatchEvent(new CustomEvent("nc:get:subtitleTrackList:response", { detail: trackList }));
+					});
+
+					window.addEventListener("nc:set:subtitleTrack:request", (event) => {
+						const trackId = event.detail;
+						const trackList = getPlayerVideo().getTextTrackList();
+						const findTrack = trackList.find((track) => track.trackId === trackId);
+						getPlayerVideo().setTextTrack(findTrack);
+					});
+
+					window.addEventListener("nc:set:seek:request", (event) => {
+						const msToGo = event.detail;
+						getPlayerVideo().seek(msToGo);
+					});
+
+					window.addEventListener("nc:get:timeCodes:request", () => {
+						const rawTimeCodes = getPlayerVideo().getTimeCodes();
+						const timeCodes = {};
+						rawTimeCodes.forEach((item) => {
+							const { type, ...rest } = item;
+							timeCodes[type] = {
+								...rest,
+							};
+						});
+						window.dispatchEvent(new CustomEvent("nc:get:timeCodes:response", { detail: timeCodes }));
+					});
+				}
+			},
+		});
+	}
+});

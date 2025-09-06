@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Netflix Cleaner</title>
+
+  <style>
+    /* Temp styles, just for test */
+    body {
+      margin: 0;
+      padding: 0;
+    }
+
+    .watch-video {
+      box-sizing: border-box;
+      height: 100%;
+      left: 0;
+      margin: 0;
+      overflow: hidden;
+      padding: 0;
+      position: absolute;
+      top: 0;
+      width: 100%;
+    }
+
+    .watch-video--player-view {
+      height: 100%;
+      left: 0;
+      margin: 0;
+      opacity: 1;
+      overflow: hidden;
+      padding: 0;
+      position: absolute;
+      top: 0;
+      width: 100%;
+      will-change: opacity;
+    }
+
+    [data-uia="player"] {
+      inset: 0;
+      overflow: hidden;
+      pointer-events: auto;
+      position: absolute;
+    }
+
+    [data-uia="video-canvas"] {
+      background-color: rgb(0, 0, 0);
+      box-sizing: border-box;
+      height: 100%;
+      left: 0;
+      opacity: 1;
+      overflow: hidden;
+      position: absolute;
+      top: 0;
+      transition: opacity 500ms linear;
+      pointer-events: auto;
+      width: 100%;
+      will-change: opacity;
+    }
+
+    video {
+      left: 50%;
+      margin: 0;
+      position: absolute;
+      top: 50%;
+      transform: translate(-50%, -50%);
+    }
+  </style>
+  <script>
+    // This is only for test
+    window.netflix = {
+      appContext: {
+        state: {
+          playerApp: {
+            getAPI: () => ({
+              videoPlayer: {
+                getAllPlayerSessionIds: () => ['test'],
+                getVideoPlayerBySessionId: () => ({
+                  getAudioTrackList: () => ([{ "trackId": "A:2:1;2;es;0;0;", "bcp47": "es", "displayName": "Español", "trackType": "PRIMARY", "rawTrackType": "PRIMARY", "channels": "2.0", "isNative": false, "surroundFormatLabel": "2.0" }, { "trackId": "A:2:1;2;es-ES;0;0;", "bcp47": "es-ES", "displayName": "Español (España)", "trackType": "PRIMARY", "rawTrackType": "PRIMARY", "channels": "2.0", "isNative": false, "surroundFormatLabel": "2.0" }, { "trackId": "A:2:1;2;en;1;0;", "bcp47": "en", "displayName": "Inglés [Original]", "trackType": "PRIMARY", "rawTrackType": "PRIMARY", "channels": "2.0", "isNative": true, "surroundFormatLabel": "2.0" }, { "trackId": "A:2:1;2;pt-BR;0;0;", "bcp47": "pt-BR", "displayName": "Portugués (Brasil)", "trackType": "PRIMARY", "rawTrackType": "PRIMARY", "channels": "2.0", "isNative": false, "surroundFormatLabel": "2.0" }, { "trackId": "A:2:1;2;it;0;0;", "bcp47": "it", "displayName": "Italiano", "trackType": "PRIMARY", "rawTrackType": "PRIMARY", "channels": "2.0", "isNative": false, "surroundFormatLabel": "2.0" }, { "trackId": "A:2:1;2;fr;0;0;", "bcp47": "fr", "displayName": "Francés", "trackType": "PRIMARY", "rawTrackType": "PRIMARY", "channels": "2.0", "isNative": false, "surroundFormatLabel": "2.0" }, { "trackId": "A:2:1;2;de;0;0;", "bcp47": "de", "displayName": "Alemán", "trackType": "PRIMARY", "rawTrackType": "PRIMARY", "channels": "2.0", "isNative": false, "surroundFormatLabel": "2.0" }, { "trackId": "A:2:2;2;en;0;0;", "bcp47": "en", "displayName": "Inglés - Audio descriptivo", "trackType": "ASSISTIVE", "rawTrackType": "ASSISTIVE", "channels": "2.0", "isNative": false, "surroundFormatLabel": "2.0" }, { "trackId": "A:2:1;2;ja;0;0;", "bcp47": "ja", "displayName": "Japonés", "trackType": "PRIMARY", "rawTrackType": "PRIMARY", "channels": "2.0", "isNative": false, "surroundFormatLabel": "2.0" }, { "trackId": "A:2:1;2;pl;0;0;", "bcp47": "pl", "displayName": "Polaco", "trackType": "PRIMARY", "rawTrackType": "PRIMARY", "channels": "2.0", "isNative": false, "surroundFormatLabel": "2.0" }, { "trackId": "A:2:1;2;ru;0;0;", "bcp47": "ru", "displayName": "Ruso", "trackType": "PRIMARY", "rawTrackType": "PRIMARY", "channels": "2.0", "isNative": false, "surroundFormatLabel": "2.0" }, { "trackId": "A:2:1;2;th;0;0;", "bcp47": "th", "displayName": "Tailandés", "trackType": "PRIMARY", "rawTrackType": "PRIMARY", "channels": "2.0", "isNative": false, "surroundFormatLabel": "2.0" }, { "trackId": "A:2:1;2;tr;0;0;", "bcp47": "tr", "displayName": "Turco", "trackType": "PRIMARY", "rawTrackType": "PRIMARY", "channels": "2.0", "isNative": false, "surroundFormatLabel": "2.0" }]),
+                  setAudioTrack: (track) => {
+                    return new Promise((resolve) => {
+                      setTimeout(() => {
+                        console.log('Audio cambiado: ', track);
+                        resolve();
+                      }, 500)
+                    });
+                  },
+                  getAudioTrack: () => ({ "trackId": "A:2:1;2;es;0;0;", "bcp47": "es", "displayName": "Español", "trackType": "PRIMARY", "rawTrackType": "PRIMARY", "channels": "2.0", "isNative": false, "surroundFormatLabel": "2.0" }),
+                  getTextTrack: () => ({ "trackId": "T:2:0;1;es;1;1;0;", "bcp47": "es", "displayName": "Desactivados", "trackType": "PRIMARY", "rawTrackType": "SUBTITLES", "isNoneTrack": false, "isForcedNarrative": true, "isImageBased": false }),
+                  setTextTrack: (track) => {
+                    return new Promise((resolve) => {
+                      setTimeout(() => {
+                        console.log('Subtitulo cambiado: ', track)
+                      }, 500)
+                    })
+                  },
+                  getTextTrackList: () => ([{ "trackId": "T:2:0;1;es;1;1;0;", "bcp47": "es", "displayName": "Desactivados", "trackType": "PRIMARY", "rawTrackType": "SUBTITLES", "isNoneTrack": false, "isForcedNarrative": true, "isImageBased": false }, { "trackId": "T:2:0;1;es;0;0;0;", "bcp47": "es", "displayName": "Español", "trackType": "PRIMARY", "rawTrackType": "SUBTITLES", "isNoneTrack": false, "isForcedNarrative": false, "isImageBased": false }, { "trackId": "T:2:0;1;es-ES;0;0;0;", "bcp47": "es-ES", "displayName": "Español (España)", "trackType": "PRIMARY", "rawTrackType": "SUBTITLES", "isNoneTrack": false, "isForcedNarrative": false, "isImageBased": false }, { "trackId": "T:2:0;1;ar;0;0;0;", "bcp47": "ar", "displayName": "Árabe", "trackType": "PRIMARY", "rawTrackType": "SUBTITLES", "isNoneTrack": false, "isForcedNarrative": false, "isImageBased": false }, { "trackId": "T:2:0;1;de;0;0;0;", "bcp47": "de", "displayName": "Alemán", "trackType": "PRIMARY", "rawTrackType": "SUBTITLES", "isNoneTrack": false, "isForcedNarrative": false, "isImageBased": false }, { "trackId": "T:2:0;1;fr;0;0;0;", "bcp47": "fr", "displayName": "Francés", "trackType": "PRIMARY", "rawTrackType": "SUBTITLES", "isNoneTrack": false, "isForcedNarrative": false, "isImageBased": false }, { "trackId": "T:2:0;1;it;0;0;0;", "bcp47": "it", "displayName": "Italiano", "trackType": "PRIMARY", "rawTrackType": "SUBTITLES", "isNoneTrack": false, "isForcedNarrative": false, "isImageBased": false }, { "trackId": "T:2:0;1;ro;0;0;0;", "bcp47": "ro", "displayName": "Rumano", "trackType": "PRIMARY", "rawTrackType": "SUBTITLES", "isNoneTrack": false, "isForcedNarrative": false, "isImageBased": false }, { "trackId": "T:2:1;1;en;0;0;0;", "bcp47": "en", "displayName": "Inglés", "trackType": "ASSISTIVE", "rawTrackType": "CLOSEDCAPTIONS", "isNoneTrack": false, "isForcedNarrative": false, "isImageBased": false }, { "trackId": "T:2:0;1;cs;0;0;0;", "bcp47": "cs", "displayName": "Checo", "trackType": "PRIMARY", "rawTrackType": "SUBTITLES", "isNoneTrack": false, "isForcedNarrative": false, "isImageBased": false }, { "trackId": "T:2:0;1;zh-Hans;0;0;0;", "bcp47": "zh-Hans", "displayName": "Chino simplificado", "trackType": "PRIMARY", "rawTrackType": "SUBTITLES", "isNoneTrack": false, "isForcedNarrative": false, "isImageBased": false }, { "trackId": "T:2:0;1;zh-Hant;0;0;0;", "bcp47": "zh-Hant", "displayName": "Chino tradicional", "trackType": "PRIMARY", "rawTrackType": "SUBTITLES", "isNoneTrack": false, "isForcedNarrative": false, "isImageBased": false }, { "trackId": "T:2:0;1;ko;0;0;0;", "bcp47": "ko", "displayName": "Coreano", "trackType": "PRIMARY", "rawTrackType": "SUBTITLES", "isNoneTrack": false, "isForcedNarrative": false, "isImageBased": false }, { "trackId": "T:2:0;1;da;0;0;0;", "bcp47": "da", "displayName": "Danés", "trackType": "PRIMARY", "rawTrackType": "SUBTITLES", "isNoneTrack": false, "isForcedNarrative": false, "isImageBased": false }, { "trackId": "T:2:0;1;fi;0;0;0;", "bcp47": "fi", "displayName": "Finés", "trackType": "PRIMARY", "rawTrackType": "SUBTITLES", "isNoneTrack": false, "isForcedNarrative": false, "isImageBased": false }, { "trackId": "T:2:0;1;el;0;0;0;", "bcp47": "el", "displayName": "Griego", "trackType": "PRIMARY", "rawTrackType": "SUBTITLES", "isNoneTrack": false, "isForcedNarrative": false, "isImageBased": false }, { "trackId": "T:2:0;1;he;0;0;0;", "bcp47": "he", "displayName": "Hebreo", "trackType": "PRIMARY", "rawTrackType": "SUBTITLES", "isNoneTrack": false, "isForcedNarrative": false, "isImageBased": false }, { "trackId": "T:2:0;1;hu;0;0;0;", "bcp47": "hu", "displayName": "Húngaro", "trackType": "PRIMARY", "rawTrackType": "SUBTITLES", "isNoneTrack": false, "isForcedNarrative": false, "isImageBased": false }, { "trackId": "T:2:0;1;id;0;0;0;", "bcp47": "id", "displayName": "Indonesio", "trackType": "PRIMARY", "rawTrackType": "SUBTITLES", "isNoneTrack": false, "isForcedNarrative": false, "isImageBased": false }, { "trackId": "T:2:0;1;ja;0;0;0;", "bcp47": "ja", "displayName": "Japonés", "trackType": "PRIMARY", "rawTrackType": "SUBTITLES", "isNoneTrack": false, "isForcedNarrative": false, "isImageBased": false }, { "trackId": "T:2:0;1;nl;0;0;0;", "bcp47": "nl", "displayName": "Neerlandés", "trackType": "PRIMARY", "rawTrackType": "SUBTITLES", "isNoneTrack": false, "isForcedNarrative": false, "isImageBased": false }, { "trackId": "T:2:0;1;nb;0;0;0;", "bcp47": "nb", "displayName": "Noruego", "trackType": "PRIMARY", "rawTrackType": "SUBTITLES", "isNoneTrack": false, "isForcedNarrative": false, "isImageBased": false }, { "trackId": "T:2:0;1;pl;0;0;0;", "bcp47": "pl", "displayName": "Polaco", "trackType": "PRIMARY", "rawTrackType": "SUBTITLES", "isNoneTrack": false, "isForcedNarrative": false, "isImageBased": false }, { "trackId": "T:2:0;1;pt-BR;0;0;0;", "bcp47": "pt-BR", "displayName": "Portugués (Brasil)", "trackType": "PRIMARY", "rawTrackType": "SUBTITLES", "isNoneTrack": false, "isForcedNarrative": false, "isImageBased": false }, { "trackId": "T:2:0;1;pt;0;0;0;", "bcp47": "pt", "displayName": "Portugués (Portugal)", "trackType": "PRIMARY", "rawTrackType": "SUBTITLES", "isNoneTrack": false, "isForcedNarrative": false, "isImageBased": false }, { "trackId": "T:2:0;1;ru;0;0;0;", "bcp47": "ru", "displayName": "Ruso", "trackType": "PRIMARY", "rawTrackType": "SUBTITLES", "isNoneTrack": false, "isForcedNarrative": false, "isImageBased": false }, { "trackId": "T:2:0;1;sv;0;0;0;", "bcp47": "sv", "displayName": "Sueco", "trackType": "PRIMARY", "rawTrackType": "SUBTITLES", "isNoneTrack": false, "isForcedNarrative": false, "isImageBased": false }, { "trackId": "T:2:0;1;th;0;0;0;", "bcp47": "th", "displayName": "Tailandés", "trackType": "PRIMARY", "rawTrackType": "SUBTITLES", "isNoneTrack": false, "isForcedNarrative": false, "isImageBased": false }, { "trackId": "T:2:0;1;tr;0;0;0;", "bcp47": "tr", "displayName": "Turco", "trackType": "PRIMARY", "rawTrackType": "SUBTITLES", "isNoneTrack": false, "isForcedNarrative": false, "isImageBased": false }, { "trackId": "T:2:0;1;vi;0;0;0;", "bcp47": "vi", "displayName": "Vietnamita", "trackType": "PRIMARY", "rawTrackType": "SUBTITLES", "isNoneTrack": false, "isForcedNarrative": false, "isImageBased": false }]),
+                  seek: (ms) => {
+                    const video = document.querySelector('.watch-video video');
+                    video.currentTime = ms / 1000
+                  },
+                  getTimeCodes: () => ([{ "type": "start", "startOffsetMs": 1042, "endOffsetMs": 1042, "Hcc": 1042, "sba": 1042 }, { "type": "ending", "startOffsetMs": 2597261, "endOffsetMs": 2597261, "Hcc": 2597261, "sba": 2597261 }, { "type": "skip_credits", "startOffsetMs": 94469, "endOffsetMs": 122455, "Hcc": 122455, "sba": 94469 }])
+                })
+              }
+            })
+          }
+        }
+      }
+    };
+
+    const getPlayerVideo = () => {
+      const playerApp = window.netflix.appContext.state.playerApp;
+      const playerAPI = playerApp.getAPI().videoPlayer;
+      const sessionId = playerAPI.getAllPlayerSessionIds()[0];
+      return playerAPI.getVideoPlayerBySessionId(sessionId);
+    };
+
+    window.addEventListener("nc:get:audioTrackList:request", () => {
+      const videoPlayer = getPlayerVideo();
+      const currentTrack = videoPlayer.getAudioTrack();
+      const trackList = videoPlayer.getAudioTrackList().map((track) => ({
+        ...track,
+        active: track.trackId === currentTrack.trackId,
+      }));
+      window.dispatchEvent(new CustomEvent("nc:get:audioTrackList:response", { detail: trackList }));
+    });
+
+    window.addEventListener("nc:set:audioTrack:request", async (event) => {
+      const trackId = event.detail;
+      const trackList = getPlayerVideo().getAudioTrackList();
+      const findTrack = trackList.find((track) => track.trackId === trackId);
+      getPlayerVideo().setAudioTrack(findTrack);
+    })
+
+    window.addEventListener("nc:get:subtitleTrackList:request", () => {
+      const videoPlayer = getPlayerVideo();
+      const currentTrack = videoPlayer.getTextTrack();
+      const trackList = videoPlayer.getTextTrackList().map((track) => ({
+        ...track,
+        active: track.trackId === currentTrack.trackId,
+      }));
+      window.dispatchEvent(new CustomEvent("nc:get:subtitleTrackList:response", { detail: trackList }));
+    });
+
+    window.addEventListener("nc:set:subtitleTrack:request", (event) => {
+      const trackId = event.detail;
+      const trackList = getPlayerVideo().getTextTrackList();
+      const findTrack = trackList.find((track) => track.trackId === trackId);
+      getPlayerVideo().setTextTrack(findTrack);
+    });
+
+    window.addEventListener("nc:set:seek:request", (event) => {
+      const msToGo = event.detail;
+      getPlayerVideo().seek(msToGo);
+    });
+
+    window.addEventListener("nc:get:timeCodes:request", () => {
+      const rawTimeCodes = getPlayerVideo().getTimeCodes();
+      const timeCodes = {};
+      rawTimeCodes.forEach((item) => {
+        const { type, ...rest } = item;
+        timeCodes[type] = {
+          ...rest,
+        };
+      });
+      window.dispatchEvent(new CustomEvent("nc:get:timeCodes:response", { detail: timeCodes }));
+    });
+  </script>
+</head>
+
+<body>
+  <div id="appMountPoint">
+    <div>
+      <div class="netflix-sans-font-loaded">
+        <div dir="ltr">
+          <div data-uia="loc" lang="es-PE" dir="ltr">
+
+            <div class="watch-video" data-live-event-state="false" data-uia="watch-video">
+              <div class="watch-video--player-view" data-uia="watch-video-player-view-minimized">
+                <div class="active default-ltr-iqcdef-cache-fntwn3" data-uia="player" data-videoid="81434744"
+                  tabindex="0">
+                  <div class="default-ltr-iqcdef-cache-18tyyic" data-uia="video-canvas">
+                    <div style="position: relative; width: 100%; height: 100%; overflow: hidden;">
+                      <div id="80133832" style="position: relative; width: 100%; height: 100%; overflow: hidden;">
+                        <!-- <video src="video.mov" tabindex="-1" style="height: 100%; width: 100%;" muted></video> -->
+                        <video
+                          src="https://download.blender.org/peach/bigbuckbunny_movies/big_buck_bunny_1080p_h264.mov"
+                          tabindex="-1" style="height: 100%; width: 100%;" muted></video>
+                        <div class="player-timedtext"
+                          style="position: absolute; inset: 176px 0; display: none; direction: ltr;"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <h3 class="title">The Good Place</h3>
+  <h4 class="playable-title">T4:E6 «El misterio de Chip Driver»</h4>
+  <script type="module" src="/src/main.tsx"></script>
+</body>
+
+</html>

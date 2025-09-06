@@ -1,0 +1,13 @@
+import type { FunctionComponent } from "preact";
+import type { ButtonProps } from "./Button.d";
+
+export const Button: FunctionComponent<ButtonProps> = ({ SvgIco, class: extraClass, ...props }) => {
+	return (
+		<button
+			class={`flex justify-center items-center w-[65px] h-[65px] border-none bg-transparent rounded-[50%] text-white opacity-55 pointer-events-auto transition-all outline-white hover:bg-white/20 hover:cursor-pointer hover:opacity-100 ${extraClass ?? ""}`}
+			{...props}
+		>
+			<SvgIco class="w-[50px] h-[50px]" />
+		</button>
+	);
+};

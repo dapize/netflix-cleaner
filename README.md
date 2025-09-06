@@ -1,5 +1,8 @@
+<div align="center">
+    <img src="package/icons/icon128.png" alt="Netflix Cleaner"/>
+</div>
 
-# 🎬 Netflix Cleaner
+# Netflix Cleaner
 
 Extensión para eliminar el molesto modal de "fuera de la red doméstica" en Netflix, reanudar automáticamente el video y reemplazar los controles ocultos con una interfaz personalizada.
 
