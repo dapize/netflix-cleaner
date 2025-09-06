@@ -12,18 +12,6 @@ export const App = () => {
 	const [inWatchPage, setInWatchPage] = useState(false);
 	const controlsTimeout = useRef<null | ReturnType<typeof setTimeout>>(null);
 
-	const handleShowControls = () => {
-		setShowControls(true);
-		if (controlsTimeout.current) {
-			clearTimeout(controlsTimeout.current);
-		}
-		controlsTimeout.current = setTimeout(() => {
-			if (!videoNode?.paused) {
-				setShowControls(false);
-			}
-		}, 3000);
-	};
-
 	useEffect(() => {
 		const updateInWatch = () => {
 			setTimeout(() => {
@@ -86,6 +74,18 @@ export const App = () => {
 	}, [inWatchPage]);
 
 	useEffect(() => {
+		const handleShowControls = () => {
+			setShowControls(true);
+			if (controlsTimeout.current) {
+				clearTimeout(controlsTimeout.current);
+			}
+			controlsTimeout.current = setTimeout(() => {
+				if (!videoNode?.paused) {
+					setShowControls(false);
+				}
+			}, 3000);
+		};
+
 		document.addEventListener("mousemove", handleShowControls);
 		document.addEventListener("mouseenter", handleShowControls);
 
